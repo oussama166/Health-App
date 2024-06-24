@@ -4,6 +4,7 @@ import { useHeaderVisibility, useScrollEffect } from "@/hooks/useEffect/Effect";
 import { AuthContextType } from "@/type";
 import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Patient } from "@/type";
 
 export const Header = () => {
   useScrollEffect();
@@ -88,49 +89,25 @@ export const Header = () => {
       {/* Start Buttons */}
       <div className={"min-w-52 flex items-center gap-5 tracking-wider"}>
         {isLogged ? (
-          <>
-            <Link to={"/Dashboard"}>
-              <Button
-                className={
-                  "font-bold bg-healthHub-700 text-primary-foreground hover:bg-healthHub-700/90 gap-1 text-base uppercase px-7 py-6"
-                }
-                size={"sm"}
-              >
-                Dashboard
-              </Button>
-            </Link>
-            <Link to={"/Login"}>
-              <Button
-                className={
-                  "font-bold bg-healthHub-700 text-primary-foreground hover:bg-healthHub-700/90 gap-1 text-base uppercase px-7 py-6"
-                }
-                onClick={() => {
-                  context.setIsLogged(false);
-                }}
-                size={"sm"}
-              >
-                Logout
-              </Button>
-            </Link>
-          </>
+          context.typeUser === "Doctor" ? (
+            <HeaderDoc />
+          ) : (
+            <HeaderPatient />
+          )
         ) : (
           <>
-            <Link to={"/Login"}>
+            <Link to="/Login">
               <Button
-                className={
-                  "font-bold bg-healthHub-700 text-primary-foreground hover:bg-healthHub-700/90 gap-1 text-base uppercase px-7 py-6"
-                }
-                size={"sm"}
+                className="font-bold bg-healthHub-700 text-primary-foreground hover:bg-healthHub-700/90 gap-1 text-base uppercase px-7 py-6"
+                size="sm"
               >
                 Login
               </Button>
             </Link>
-            <Link to={"/Registration"}>
+            <Link to="/Registration">
               <Button
-                className={
-                  "font-bold bg-healthHub-700 text-primary-foreground hover:bg-healthHub-700/90 gap-1 text-base uppercase px-7 py-6"
-                }
-                size={"sm"}
+                className="font-bold bg-healthHub-700 text-primary-foreground hover:bg-healthHub-700/90 gap-1 text-base uppercase px-7 py-6"
+                size="sm"
               >
                 Join Us
               </Button>
@@ -140,5 +117,56 @@ export const Header = () => {
       </div>
       {/* End Buttons */}
     </nav>
+  );
+};
+
+const HeaderDoc = () => {
+  const context: AuthContextType = useContext(AuthContext);
+  const { isLogged } = context;
+  useEffect(() => {
+    console.log(isLogged);
+  }, [isLogged]);
+  return (
+    <>
+      <Link to={"/Dashboard"}>
+        <Button
+          className={
+            "font-bold bg-healthHub-700 text-primary-foreground hover:bg-healthHub-700/90 gap-1 text-base uppercase px-7 py-6"
+          }
+          size={"sm"}
+        >
+          Dashboard
+        </Button>
+      </Link>
+      <Link to={"/Login"}>
+        <Button
+          className={
+            "font-bold bg-healthHub-700 text-primary-foreground hover:bg-healthHub-700/90 gap-1 text-base uppercase px-7 py-6"
+          }
+          onClick={() => {
+            context.setIsLogged(false);
+          }}
+          size={"sm"}
+        >
+          Logout
+        </Button>
+      </Link>
+    </>
+  );
+};
+
+const HeaderPatient = () => {
+  const context: AuthContextType = useContext(AuthContext);
+  const { user } = context;
+  let userData: Patient | null = null;
+  useEffect(() => {
+    if (user !== null) {
+      userData = JSON.parse(user);
+    }
+  }, [user]);
+  return (
+    <>
+      <h1>{userData != null && userData?.userName}</h1>
+    </>
   );
 };

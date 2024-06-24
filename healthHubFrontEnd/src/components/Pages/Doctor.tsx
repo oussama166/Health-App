@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import {
-  Calendar,
   DateField,
   DateInput,
   DateSegment,
-  Input,
   Label,
   TextArea,
   TextField,
@@ -131,8 +129,8 @@ const ConsultationBody = ({
   time,
   setTime,
 }: {
-  date: Date | undefined;
-  setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  date?: Date | undefined;
+  setDate?: React.Dispatch<React.SetStateAction<Date | undefined>>;
   time?: Date | undefined;
   setTime?: React.Dispatch<React.SetStateAction<Date | undefined>>;
 }) => {
@@ -164,10 +162,11 @@ const ConsultationBody = ({
         <TextField className={"text-xl space-y-2 w-full"}>
           <Label>Description</Label>
           <TextArea
-            className={"react-aria-TextField react-aria-TextArea min-h-[100px] "}
+            className={
+              "react-aria-TextField react-aria-TextArea min-h-[100px] "
+            }
           />
         </TextField>
-
       </div>
     </>
   );

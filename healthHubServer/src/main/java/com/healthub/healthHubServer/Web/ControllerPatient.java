@@ -79,8 +79,9 @@ public class ControllerPatient {
     }
 
     // ========== UPDATE ========= //
-    @PostMapping(
+    @PutMapping(
             path = "/updatePatient",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> updatePatient(
@@ -89,6 +90,7 @@ public class ControllerPatient {
         try {
             Optional<Patient> patientInfo = managerPatient.updatePatient(patient);
             if (patientInfo.isPresent()) {
+                logger.info(patientInfo.get().getDossier_medicale().getAllergies());
                 return ResponseEntity.status(200).body(patientInfo.get());
             }
             throw new Exception("Patient info not modified !!!");

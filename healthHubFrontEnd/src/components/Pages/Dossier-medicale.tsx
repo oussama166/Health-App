@@ -1,11 +1,14 @@
 import { putPatients } from "@/api/Patient";
 import { Patient } from "@/type";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 export const DossierMedicale = () => {
   const navigate = useNavigate();
   let patient: string | null = "";
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const handleSubmit = async () => {
+
     patient = localStorage.getItem("Patient");
 
     const Antecedent = (
@@ -36,7 +39,8 @@ export const DossierMedicale = () => {
         consultations: [],
         avis: [],
       };
-      await putPatients(patientE);
+      setIsLoaded(!(await putPatients(patientE)));
+      isLoaded && navigate("/Login");
     }
   };
   return (
@@ -63,13 +67,7 @@ export const DossierMedicale = () => {
 
       {/* Form Section */}
       <div className="w-full flex items-center md:p-8 p-6  h-full lg:w-11/12 lg:ml-auto">
-        <form
-          onSubmit={() => {
-            handleSubmit();
-            navigate("/FindDoctors");
-          }}
-          className="max-w-lg w-full mx-auto"
-        >
+        <form className="max-w-lg w-full mx-auto">
           <div className="mb-12">
             <h3 className="text-3xl font-bold text-healthHub-300">
               Dossier-Medicale
@@ -113,8 +111,8 @@ export const DossierMedicale = () => {
           </div>
           <div className="mt-12">
             <button
-              type="submit"
               className="w-max shadow-xl py-2.5 px-8 text-sm font-semibold rounded-md bg-transparent text-healthHub-700 border border-healthHub-700 focus:outline-none"
+              onClick={() => handleSubmit()}
             >
               Create Dossier
             </button>

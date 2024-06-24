@@ -17,16 +17,16 @@ export const postPatients = async (data: Patient) => {
 };
 
 export const putPatients = async (data: Patient) => {
-  return await axios
-    .post(`${host}updatePatient`, data)
-    .then((res) => {
-      alert("Patient updeted successfully");
-      localStorage.clear();
-      localStorage.setItem("Patient", JSON.stringify(res));
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  try {
+    const response = await axios.put(`${host}updatePatient`, data);
+    alert("Patient updated successfully");
+    localStorage.clear();
+    localStorage.setItem("Patient", JSON.stringify(response.data));
+    return true;
+  } catch (error) {
+    console.error("Error updating patient:", error);
+    return false;
+  }
 };
 export const getPatient = async (name: string) => {
   return await axios
