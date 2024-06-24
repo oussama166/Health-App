@@ -1,30 +1,44 @@
-// import { useNavigate } from "react-router-dom";
+import { putPatients } from "@/api/Patient";
+import { Patient } from "@/type";
+import { useNavigate } from "react-router-dom";
 export const DossierMedicale = () => {
-  // const navigate = useNavigate();
-  // const handleSubmit = async () => {
-  //   const Antecedent = (
-  //     document.querySelector("input[name=Antecedent]") as HTMLInputElement
-  //   ).value;
-  //   const Allergies = (
-  //     document.querySelector("input[name=Allergies]") as HTMLInputElement
-  //   ).value;
-  //   const Traitement = (
-  //     document.querySelector("input[name=Traitement]") as HTMLInputElement
-  //   ).value;
-  //   await putPatients({
-  //     userName: "",
-  //     email: "",
-  //     password: "",
-  //     dossier_medicale: {
-  //       antecedent: Antecedent,
-  //       allergies: Allergies,
-  //       traitement: Traitement,
-  //     },
-  //     consultations: [],
-  //     avis: [],
-  //     id: 0,
-  //   });
-  // };
+  const navigate = useNavigate();
+  let patient: string | null = "";
+
+  const handleSubmit = async () => {
+    patient = localStorage.getItem("Patient");
+
+    const Antecedent = (
+      document.querySelector("input[name=Antecedent]") as HTMLInputElement
+    ).value;
+
+    const Allergies = (
+      document.querySelector("input[name=Allergies]") as HTMLInputElement
+    ).value;
+
+    const Traitement = (
+      document.querySelector("input[name=Traitement]") as HTMLInputElement
+    ).value;
+
+    if (patient != null) {
+      const patientj: Patient = JSON.parse(patient);
+      const patientE: Patient = {
+        id: patientj.id,
+        userName: patientj.userName,
+        email: patientj.email,
+        password: patientj.password,
+        dossier_medicale: {
+          id: patientj.dossier_medicale.id,
+          antecedent: Antecedent,
+          allergies: Allergies,
+          traitement: Traitement,
+        },
+        consultations: [],
+        avis: [],
+      };
+      await putPatients(patientE);
+    }
+  };
   return (
     <div className="font-[sans-serif] h-screen bg-white text-black  flex">
       {/* Image Section */}
@@ -50,7 +64,10 @@ export const DossierMedicale = () => {
       {/* Form Section */}
       <div className="w-full flex items-center md:p-8 p-6  h-full lg:w-11/12 lg:ml-auto">
         <form
-          onSubmit={() => handleSubmit()}
+          onSubmit={() => {
+            handleSubmit();
+            navigate("/FindDoctors");
+          }}
           className="max-w-lg w-full mx-auto"
         >
           <div className="mb-12">
@@ -99,7 +116,7 @@ export const DossierMedicale = () => {
               type="submit"
               className="w-max shadow-xl py-2.5 px-8 text-sm font-semibold rounded-md bg-transparent text-healthHub-700 border border-healthHub-700 focus:outline-none"
             >
-              CreateDoss
+              Create Dossier
             </button>
           </div>
         </form>

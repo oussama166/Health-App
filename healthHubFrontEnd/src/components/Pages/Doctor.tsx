@@ -1,21 +1,24 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import {
+  Calendar,
+  DateField,
+  DateInput,
+  DateSegment,
+  Input,
+  Label,
+  TextArea,
+  TextField,
+  TimeField,
+} from "react-aria-components";
+
 import { FaStar } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { Button } from "../ui/button";
 import {
-  TimeField,
-  Label,
-  DateInput,
-  DateSegment,
-} from "react-aria-components";
-import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
   DrawerTrigger,
 } from "../ui/drawer";
 
@@ -24,6 +27,8 @@ function Doctor() {
   useEffect(() => {
     console.log(id);
   }, [id]);
+
+  const [date, setDate] = useState<Date>();
 
   return (
     <div className="w-full px-24 pt-40 flex flex-col gap-10">
@@ -42,19 +47,11 @@ function Doctor() {
               </Button>
             </DrawerTrigger>
             <DrawerContent>
-              <DrawerHeader>
-                <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-                <DrawerDescription>
-                  This action cannot be undone.
-                </DrawerDescription>
-              </DrawerHeader>
-
-              <ConsultationBody />
-
+              <ConsultationBody date={date} setDate={setDate} />
               <DrawerFooter>
-                <Button>Submit</Button>
+                <Button className="w-full py-7 text-xl">Submit</Button>
                 <DrawerClose>
-                  <Button variant="outline" className="w-full">
+                  <Button variant="outline" className="w-full py-7 text-xl">
                     Cancel
                   </Button>
                 </DrawerClose>
@@ -128,13 +125,50 @@ const ReviewComp = ({
   );
 };
 
-const ConsultationBody = () => {
+const ConsultationBody = ({
+  date,
+  setDate,
+  time,
+  setTime,
+}: {
+  date: Date | undefined;
+  setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  time?: Date | undefined;
+  setTime?: React.Dispatch<React.SetStateAction<Date | undefined>>;
+}) => {
   return (
     <>
-      <TimeField>
-        <Label>Event time</Label>
-        <DateInput>{(segment) => <DateSegment segment={segment} />}</DateInput>
-      </TimeField>
+      <div className="w-[50%] flex flex-col items-center gap-10 mx-auto my-9">
+        <h1 className="text-2xl font-semibold text-black">Book Consultation</h1>
+        <div className="flex flex-row gap-5 w-full justify-start items-center">
+          <TimeField className={"text-xl space-y-2"}>
+            <Label>Start Time</Label>
+            <DateInput>
+              {(segment) => <DateSegment segment={segment} />}
+            </DateInput>
+          </TimeField>
+          <TimeField className={"text-xl space-y-2"}>
+            <Label>End Time</Label>
+            <DateInput>
+              {(segment) => <DateSegment segment={segment} />}
+            </DateInput>
+          </TimeField>
+
+          <DateField className={"text-xl space-y-2"}>
+            <Label>Date of Consultation</Label>
+            <DateInput>
+              {(segment) => <DateSegment segment={segment} />}
+            </DateInput>
+          </DateField>
+        </div>
+        <TextField className={"text-xl space-y-2 w-full"}>
+          <Label>Description</Label>
+          <TextArea
+            className={"react-aria-TextField react-aria-TextArea min-h-[100px] "}
+          />
+        </TextField>
+
+      </div>
     </>
   );
 };

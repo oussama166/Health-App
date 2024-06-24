@@ -3,14 +3,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");
 
-
+@import "Theme.css";
 /* Configuration of Tailwind and default Shadcn style */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-body{
-}
 
 @layer base {
   :root {
@@ -75,7 +72,11 @@ body{
     --ring: 212.7 26.8% 83.9%;
   }
   .gradient-text {
-    background: linear-gradient(318deg, rgba(136, 216, 255, 1)  0%,rgba(1, 121, 180, 1) 100%);
+    background: linear-gradient(
+      318deg,
+      rgba(136, 216, 255, 1) 0%,
+      rgba(1, 121, 180, 1) 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -90,53 +91,74 @@ body{
     @apply bg-background text-foreground;
   }
   .container-center {
-    @apply mt-20 w-[calc(100vw-10%)] mx-auto space-y-5
+    @apply mt-20 w-[calc(100vw-10%)] mx-auto space-y-5;
   }
 }
-
-
-
 .react-aria-TimeField {
-  color: var(--text-color);
+  color: black;
 }
 
 .react-aria-DateInput {
-  display: flex;
-  padding: 4px;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  background: var(--field-background);
-  width: fit-content;
-  min-width: 150px;
-  white-space: nowrap;
-  forced-color-adjust: none;
+  display: flex !important;
+  padding: 6px !important; /* Slightly increased padding for better touch targets */
+  border: 1px solid #ccc !important; /* Light gray border for a subtle look */
+  border-radius: 8px !important; /* Slightly larger border-radius for smoother corners */
+  background: #f9f9f9 !important; /* Light background for contrast */
+  width: fit-content !important;
+  min-width: 160px !important; /* Slightly wider for better readability */
+  white-space: nowrap !important;
+  forced-color-adjust: none !important;
 
   &[data-focus-within] {
-    outline: 2px solid var(--focus-ring-color);
-    outline-offset: -1px;
+    outline: 2px solid #0078d4 !important; /* Blue focus ring for better visibility */
+    outline-offset: -1px !important;
   }
 }
 
 .react-aria-DateSegment {
-  padding: 0 2px;
+  padding: 0 4px; /* Increased padding for better readability */
   font-variant-numeric: tabular-nums;
   text-align: end;
-  color: var(--text-color);
+  color: black;
 
-  &[data-type=literal] {
+  &[data-type="literal"] {
     padding: 0;
   }
 
   &[data-placeholder] {
-    color: var(--text-color-placeholder);
+    color: #999; /* Light gray for placeholder text */
     font-style: italic;
   }
 
   &:focus {
-    color: var(--highlight-foreground);
-    background: var(--highlight-background);
+    color: white;
+    background: #0078d4; /* Blue background for focused segment */
     outline: none;
     border-radius: 4px;
     caret-color: transparent;
+  }
+}
+
+.react-aria-TextField {
+  display: flex !important;
+  flex-direction: column;
+  width: fit-content !important;
+  color: black;
+}
+
+.react-aria-TextArea {
+  min-width: 160px;
+  width: 100% !important;
+  padding: 6px !important; /* Slightly increased padding for better touch targets */
+  margin: 0;
+  border: 1px solid #ccc !important; /* Light gray border for a subtle look */
+  border-radius: 8px !important; /* Slightly larger border-radius for smoother corners */
+  background: #f9f9f9 !important; /* Light background for contrast */
+  font-size: 1.143rem;
+  color: black;
+
+  &[data-focused] {
+    outline: 2px solid #0078d4 !important; /* Blue focus ring for better visibility */
+    outline-offset: -1px !important;
   }
 }

@@ -15,7 +15,7 @@ import { SiNotion } from "react-icons/si";
 import { useState } from "react";
 import { format } from "date-fns";
 
-import {speciality} from "@/manifest.json";
+import { speciality } from "@/manifest.json";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -190,7 +190,10 @@ function Hero() {
               Specialty
             </h1>
             <Select>
-              <SelectTrigger className="w-full py-8 px-4 text-xl ring-offset-blue-500 focus-visible:ring-1 focus-visible:ring-blues-500">
+              <SelectTrigger
+                className="w-full py-8 px-4 text-xl ring-offset-blue-500 focus-visible:ring-1 focus-visible:ring-blues-500"
+                chevronDownIcon={false}
+              >
                 <SelectValue
                   placeholder="Internal Medicine"
                   defaultValue={"Internal Medicine"}

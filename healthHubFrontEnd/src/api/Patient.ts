@@ -7,9 +7,22 @@ export const postPatients = async (data: Patient) => {
     .post(`${host}createPatient`, data)
     .then((res) => {
       alert("Patient created successfully");
-      console.log(res)
+      console.log(res);
       localStorage.clear();
       localStorage.setItem("Patient", JSON.stringify(res.data));
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
+export const putPatients = async (data: Patient) => {
+  return await axios
+    .post(`${host}updatePatient`, data)
+    .then((res) => {
+      alert("Patient updeted successfully");
+      localStorage.clear();
+      localStorage.setItem("Patient", JSON.stringify(res));
     })
     .catch((error) => {
       console.error(error);
