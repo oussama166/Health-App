@@ -3,6 +3,12 @@ import { FaStar } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { Button } from "../ui/button";
 import {
+  TimeField,
+  Label,
+  DateInput,
+  DateSegment,
+} from "react-aria-components";
+import {
   Drawer,
   DrawerClose,
   DrawerContent,
@@ -42,10 +48,15 @@ function Doctor() {
                   This action cannot be undone.
                 </DrawerDescription>
               </DrawerHeader>
+
+              <ConsultationBody />
+
               <DrawerFooter>
                 <Button>Submit</Button>
                 <DrawerClose>
-                  <Button variant="outline" className="w-full">Cancel</Button>
+                  <Button variant="outline" className="w-full">
+                    Cancel
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -114,6 +125,17 @@ const ReviewComp = ({
         {review}
       </p>
     </div>
+  );
+};
+
+const ConsultationBody = () => {
+  return (
+    <>
+      <TimeField>
+        <Label>Event time</Label>
+        <DateInput>{(segment) => <DateSegment segment={segment} />}</DateInput>
+      </TimeField>
+    </>
   );
 };
 export default Doctor;
