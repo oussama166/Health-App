@@ -2,25 +2,54 @@ import { useEffect } from "react";
 import { FaStar } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { Button } from "../ui/button";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "../ui/drawer";
 
 function Doctor() {
   const id = useParams().id;
   useEffect(() => {
     console.log(id);
   }, [id]);
+
   return (
     <div className="w-full px-24 pt-40 flex flex-col gap-10">
       <div className="flex flex-row flex-shrink-0 gap-20 ">
         {/* Start Section Image */}
         <div className="space-y-5">
           <div className="min-w-56 min-h-56 w-56  h-56  rounded-full flex items-center justify-center bg-[url('/xavatario.png')] bg-center bg-cover bg-no-repeat"></div>
-          <Button
-            variant={"default"}
-            size={"lg"}
-            className="text-xl font-semibold bg-blues-500 hover:bg-blues-600"
-          >
-            <span>Book Appointment</span>
-          </Button>
+          <Drawer>
+            <DrawerTrigger>
+              <Button
+                variant={"default"}
+                size={"lg"}
+                className="text-xl font-semibold bg-blues-500 hover:bg-blues-600"
+              >
+                <span>Book Appointment</span>
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+                <DrawerDescription>
+                  This action cannot be undone.
+                </DrawerDescription>
+              </DrawerHeader>
+              <DrawerFooter>
+                <Button>Submit</Button>
+                <DrawerClose>
+                  <Button variant="outline" className="w-full">Cancel</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
         </div>
         {/* End Section Image */}
 
