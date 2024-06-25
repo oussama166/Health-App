@@ -6,13 +6,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { speciality } from "@/manifest.json";
+import { speciality,Ville } from "@/manifest.json";
 import { Doctor } from "@/type";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const RegistrationM = () => {
   const refDrop = useRef<HTMLSpanElement>(null);
+  const refVille = useRef<HTMLSpanElement>(null);
   const navigation = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -25,7 +26,7 @@ export const RegistrationM = () => {
       password: e.currentTarget.password.value,
       price: Number(e.currentTarget.consultationp.value),
       specialty: (refDrop.current as HTMLSpanElement).innerHTML,
-      ville: "Casablanca",
+      ville: (refVille.current as HTMLSpanElement).innerHTML,
       mapsUrl: "mapsUrl",
       consultations: [],
       avis: [],
@@ -162,6 +163,29 @@ export const RegistrationM = () => {
               </SelectTrigger>
               <SelectContent>
                 {speciality.map((item, index) => (
+                  <SelectItem className="text-base" key={index} value={item}>
+                    {item}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="mt-10">
+            <label className="text-xs block mb-2">Ville</label>
+            <Select>
+              <SelectTrigger
+                className="w-full py-2 px-4 text-base ring-offset-blue-500 focus-visible:ring-1 focus-visible:ring-blues-500"
+                chevronDownIcon={false}
+                name="speciality"
+              >
+                <SelectValue
+                  placeholder="Select Ville"
+                  defaultValue={"Maroc"}
+                  ref={refVille}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {Ville.map((item, index) => (
                   <SelectItem className="text-base" key={index} value={item}>
                     {item}
                   </SelectItem>

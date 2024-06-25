@@ -30,6 +30,7 @@ export const FindDoctors = () => {
 
   const [filterText, setFilterText] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState('');
+  const [selectedVille, setSelectedVille] = useState('');
 
   const handleFilterChange = (event) => {
     setFilterText(event.target.value);
@@ -39,6 +40,12 @@ export const FindDoctors = () => {
   const handleSpecialtyChange = (event) => {
     setSelectedSpecialty(event.target.value);
     setFilterText(''); // Reset text filter when specialty filter is used
+  };
+ 
+  const handleVilleChange = (event) => {
+    setSelectedVille(event.target.value);
+    setFilterText(''); // Reset text filter when specialty filter is used
+    setSelectedSpecialty('');
   };
 
   let filteredDoctors = doctors;
@@ -51,18 +58,31 @@ export const FindDoctors = () => {
     filteredDoctors = doctors.filter(doctor =>
       doctor.specialty === selectedSpecialty
     );
+  } else if (selectedVille){
+    filteredDoctors =doctors.filter(doctor =>
+      doctor.ville === selectedVille
+    ); 
   }
 
   const specialties = Array.from(new Set(doctors.map(doctor => doctor.specialty)));
+  const Ville = Array.from(new Set(doctors.map(doctor => doctor.ville)));
 
   return (
     <div className="font-[sans-serif] bg-white text-black p-6">
-      <div className="grid grid-cols-2 gap-4 my-28 mx-28">
+      <div className="grid grid-cols-3 gap-4 my-28 mx-28">
         <select className="w-full border border-gray-300 rounded py-8 px-4 text-xl ring-offset-blue-500 focus-visible:ring-1 focus-visible:ring-blues-500" value={selectedSpecialty} onChange={handleSpecialtyChange}>
         <option value="">All Specialties</option>
         {specialties.map(specialty => (
           <option key={specialty} value={specialty}>
             {specialty}
+          </option>
+        ))}
+      </select>
+      <select className="w-full border border-gray-300 rounded py-8 px-4 text-xl ring-offset-blue-500 focus-visible:ring-1 focus-visible:ring-blues-500" value={selectedVille} onChange={handleVilleChange}>
+        <option value="">Ville</option>
+        {Ville.map(ville => (
+          <option key={ville} value={ville}>
+            {ville}
           </option>
         ))}
       </select>
