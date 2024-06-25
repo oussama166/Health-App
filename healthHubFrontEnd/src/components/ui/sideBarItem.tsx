@@ -42,7 +42,6 @@ const sideBarItemData: SideBarItemData = {
   attendance: {
     main: "attendance",
     sub: {
-      "Daily log": "/dailyLog",
       Request: "/request",
     },
     icon: <FaRegClock className="text-xl" />,
@@ -50,8 +49,7 @@ const sideBarItemData: SideBarItemData = {
   settings: {
     main: "settings",
     sub: {
-      Profile: "/profile",
-      Password: "/password",
+      Profile: "/Password",
     },
     icon: <FaCog className="text-xl" />,
   },
@@ -150,6 +148,9 @@ function SideBarItem({
                 className={cn(
                   "bg-transparent rounded-lg w-full hover:bg-neutral-400/30 p-3 cursor-pointer transition-all ease-in-out hover:text-neutral-900/80 hover:rounded-lg"
                 )}
+                onClick={() => {
+                  setActive(key);
+                }}
               >
                 <h1 className="text-xl font-semibold">{key}</h1>
               </div>

@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { DashboardContext } from "../Dashboard";
 import DashboardItem from "./Items/DashboardItem";
 import Jobdesk from "./Items/Jobdesk";
+import RequestItem from "./Items/RequestItem";
 
 function ContentDashboard() {
   const { active } = useContext(DashboardContext);
@@ -14,6 +15,9 @@ function ContentDashboard() {
     }
     if (active == "desktop") {
       component = <Jobdesk />;
+    }
+    if(active == "Request"){
+      component = <RequestItem />
     }
     setActiveComponent(component);
   }, [active]);

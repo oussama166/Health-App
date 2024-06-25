@@ -60,6 +60,22 @@ public class ServiceConsultation implements ManagerConsultation {
         }
     }
 
+    @Override
+    public Optional<Patient> getPatientByConsultaionAndDoctor(
+            int idDoc,
+            int idCons
+    ) {
+        try {
+            Optional<Patient> patient = consultationRepository.findByIdAndMedecin_Id(idDoc, idCons);
+            if (patient.isPresent()) {
+                return patient;
+            }
+            throw new Exception("Can not get the list of consultation this doc!!!");
+        } catch (Exception e) {
+            logger.warn(e.getMessage());
+            return Optional.empty();
+        }
+    }
 
     // ================== Select by state consultation =======================
     @Override
@@ -90,6 +106,7 @@ public class ServiceConsultation implements ManagerConsultation {
         }
     }
 
+
     @Override
     public Optional<List<Consultation>> getConsultationRejected(Medecin medecin, Date dateConsultations) {
         try {
@@ -106,9 +123,9 @@ public class ServiceConsultation implements ManagerConsultation {
 
 
     @Override
-    public Optional<List<Consultation>> getConsultationToday(Date date,Medecin medecin) {
+    public Optional<List<Consultation>> getConsultationToday(Date date, Medecin medecin) {
         try {
-           
+
             Optional<List<Consultation>> consultationsTody = consultationRepository.findByDateAndMedecin(date, medecin, ConsultationStatus.REJECTED);
             if (consultationsTody.isPresent()) {
                 return Optional.of(consultationsTody.get());
@@ -119,6 +136,7 @@ public class ServiceConsultation implements ManagerConsultation {
             return Optional.empty();
         }
     }
+
 
     @Override
     public Optional<Consultation> getConsultation(Medecin medecin, Patient patientId, Date ConsultationDate) {
@@ -135,6 +153,35 @@ public class ServiceConsultation implements ManagerConsultation {
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Consultation> modifiedStatus(
+            Consultation consultation
+    ) {
+        try {
+            Optional<Consultation> optionalConsultation = consultationRepository.findById(consultation.getId());
+            if (optionalConsultation.isPresent()) {
+                Consultation existingConsultation = optionalConsultation.get();
+
+                // Log the current and new status
+                logger.info("Current status: {}", existingConsultation.getStatus());
+                logger.info("New status: {}", consultation.getStatus());
+
+                // Update the status
+                existingConsultation.setStatus(consultation.getStatus());
+
+                // Save the updated consultation
+                Consultation updatedConsultation = consultationRepository.save(existingConsultation);
+                return Optional.of(updatedConsultation);
+            } else {
+                logger.error("Consultation not found for id: {}", consultation.getId());
+                throw new Exception("Consultation not found");
+            }
+        } catch (Exception e) {
+            logger.error("Error occurred while modifying status", e);
             return Optional.empty();
         }
     }

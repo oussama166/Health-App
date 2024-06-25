@@ -1,14 +1,13 @@
 import {
   ColumnDef,
   ColumnFiltersState,
-  Row,
   SortingState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useReactTable,
+  useReactTable
 } from "@tanstack/react-table";
 
 import { Input } from "@/components/ui/input";
@@ -22,14 +21,6 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { Button } from "./button";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "./dialog";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -120,36 +111,9 @@ export function DataTable<TData, TValue>({
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <TableCell
-                        key={cell.id}
-                        className="text-base font-semibold cursor-pointer"
-                        onClick={() => {
-                          console.log(row.original);
-                        }}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <div className="max-w-[40vw] min-h-[40vh]">
-                        <DialogHeader className="mb-5">
-                          <DialogTitle className="text-xl">
-                            {row.original.title}
-                          </DialogTitle>
-                          <DialogDescription>
-                            {row.original.name}
-                          </DialogDescription>
-                        </DialogHeader>
-
-                        <BodyDialog row={row} />
-                      </div>
-                    </DialogContent>
-                  </Dialog>
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
                 ))}
               </TableRow>
             ))
@@ -190,26 +154,4 @@ export function DataTable<TData, TValue>({
   );
 }
 
-const BodyDialog = ({ row }: { row: Row<unknown> }) => {
-  console.log(row);
-  return (
-    <div className="grid grid-rows-4 grid-flow-col gap-2 justify-stretch">
-      {Object.keys(row.original).map((key) => {
-        if(
-          key === "title" ||
-          key === "description"
-        ){
 
-          return (
-            <div key={key} className="min-w-[200px]">
-              <h1 className="text-xl font-medium tracking-wider">{key}</h1>
-              <h1 className="text-base font-normal tracking-wider text-neutral-500">
-                {row.original[key]} 
-              </h1>
-            </div>
-          );
-        }
-      })}
-    </div>
-  );
-};

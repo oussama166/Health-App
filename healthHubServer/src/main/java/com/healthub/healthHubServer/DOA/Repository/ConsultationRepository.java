@@ -31,7 +31,17 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Inte
     Optional<Set<Consultation>> findByMedecinAndDateAndPatientConsulatation(Medecin medecin, Date date, Patient patientConsulatation);
 
     @Query(
-            value = "SELECT ct FROM Consultation ct WHERE ct.date = ?1 AND ct.medecin = ?2 AND ct.Status != ?3"
+            value = "SELECT c FROM Consultation c LEFT JOIN FETCH c.patientConsulatation WHERE c.date = ?1 AND c.medecin = ?2 AND c.Status != ?3"
     )
     Optional<List<Consultation>> findByDateAndMedecin(Date date, Medecin medecin, ConsultationStatus consultationStatus);
+
+    @Query(
+            value = "SELECT  ct.patientConsulatation FROM Consultation ct WHERE ct.id = ?1 AND ct.medecin.id = ?2"
+    )
+    Optional<Patient> findByIdAndMedecin_Id(int id, int idMedecin);
+
+    @Query(
+            value = "SELECT ct FROM Consultation ct WHERE ct.id = ?1"
+    )
+    Optional<Consultation> findById(int id);
 }

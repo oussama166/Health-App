@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Consultation } from "@/type";
+import { Consultation, Patient } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
@@ -67,12 +67,12 @@ export const columns: ColumnDef<Consultation>[] = [
         </Button>
       );
     },
-    cell : ({row}) => {
+    cell: ({ row }) => {
       const dt = format(row.getValue("endConsultation"), "HH:mm");
       return (
         <div className="w-full flex items-center justify-center">{dt}</div>
-      )
-    }
+      );
+    },
   },
   {
     accessorKey: "comment",
@@ -108,29 +108,56 @@ export const columns: ColumnDef<Consultation>[] = [
   },
 ];
 
-export const columnsConsultation: ColumnDef<scheduleConsultation>[] = [
+export const columnsConsultation: ColumnDef<Consultation>[] = [
   {
     accessorKey: "id",
     header: "ID",
   },
   {
-    accessorKey: "name",
-    header: "Name",
-  },
-  {
     accessorKey: "date",
-    header: "Date",
+    header: "Date of Consultation",
+    cell: ({ row }) => {
+      const dt = format(row.getValue("date"), "dd/MM/yyyy");
+      return (
+        <div className="w-full flex items-center justify-center">{dt}</div>
+      );
+    },
   },
   {
-    accessorKey: "startTime",
-    header: "Start Time",
+    accessorKey: "startConsultation",
+    header: "Start Session at",
+    cell: ({ row }) => {
+      const dt = format(row.getValue("startConsultation"), "HH:mm");
+      return (
+        <div className="w-full flex items-center justify-center">{dt}</div>
+      );
+    },
   },
   {
-    accessorKey: "endTime",
-    header: "End Time",
+    accessorKey: "endConsultation",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          End Session at
+          <MoreHorizontal className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const dt = format(row.getValue("endConsultation"), "HH:mm");
+      return (
+        <div className="w-full flex items-center justify-center">{dt}</div>
+      );
+    },
   },
   {
-    accessorKey: "phone",
-    header: "Phone",
+    accessorKey: "comment",
+    header: "Description",
   },
 ];
+
+
+

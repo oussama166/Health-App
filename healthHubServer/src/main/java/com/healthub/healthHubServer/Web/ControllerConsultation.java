@@ -2,6 +2,7 @@ package com.healthub.healthHubServer.Web;
 
 import com.healthub.healthHubServer.DOA.Model.Consultation;
 import com.healthub.healthHubServer.DOA.Model.Medecin;
+import com.healthub.healthHubServer.DOA.Model.Patient;
 import com.healthub.healthHubServer.Service.Manager.ManagerConsultation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -9,6 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -174,6 +176,39 @@ public class ControllerConsultation {
         }
     }
 
+    @PostMapping(path = "/getPatientByIdAndIdDoc")
+    public ResponseEntity<?> getPatientByIdAndIdDoc(
+            @RequestParam(name = "id") String id,
+            @RequestParam(name = "idDoc") String idDoc
+    ) {
+        try {
+            int idCons = Integer.parseInt(id);
+            int idDoctor = Integer.parseInt(idDoc);
+            Optional<Patient> patieCons = consultationManager.getPatientByConsultaionAndDoctor(idCons, idDoctor);
+            return ResponseEntity.status(200).body(patieCons.get());
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    @PutMapping(
+            path = "/modifiedConsultation",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> modifiedConsultationStatus(
+            @RequestBody Consultation consultation
+    ) {
+        try {
+            Optional<Consultation> consultationOptional = consultationManager.modifiedStatus(consultation);
+            if (consultationOptional.isPresent()) {
+                return ResponseEntity.status(200).body(consultationOptional.get());
+            }
+            throw new Exception("Error!!!");
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
 
     // =========== Modification =========== //
 

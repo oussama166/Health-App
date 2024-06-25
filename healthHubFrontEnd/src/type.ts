@@ -60,7 +60,7 @@ export type Consultation = {
   startConsultation: string;
   endConsultation: string;
   comment: string;
-  Status: "REJECTED" | "PENDING" | "DONE";
+  status: "REJECTED" | "PENDING" | "DONE" | string;
   medecin: Doctor | null;
   patientConsulatation: Patient;
 };

@@ -32,7 +32,16 @@ public interface ManagerConsultation {
             Medecin medecin,
             Date dateConsultations
     );
-    Optional<List<Consultation>> getConsultationToday(Date date,Medecin medecin);
+
+    Optional<List<Consultation>> getConsultationToday(Date date, Medecin medecin);
+
+    Optional<Patient> getPatientByConsultaionAndDoctor(
+            int idDoc,
+            int idCons
+    );
+
+    Optional<Consultation> modifiedStatus(
+            Consultation consultation);
 
     Optional<Consultation> getConsultation(
             Medecin medecin,

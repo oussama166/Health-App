@@ -29,7 +29,9 @@ public class Consultation {
     @JoinColumn(name = "medecin_id")
 
     private Medecin medecin;
-    @ManyToOne
+
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "patient_id")
     @JsonBackReference
     private Patient patientConsulatation;

@@ -1,9 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  columnsConsultation,
-  scheduleConsultation,
-} from "@/components/ui/columns";
-import { DataTable } from "@/components/ui/datatable";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { BiCalendarCheck } from "react-icons/bi";
@@ -16,20 +11,40 @@ import { staticStyle } from "./DashboardItem";
 // Getting the data from the manifest
 
 import { AuthContext } from "@/App";
-import { dataJobDesk } from "@/manifest.json";
-import { Doctor, JobDeskItemProps } from "@/type";
+import { getConsultation } from "@/api/Consultation";
+import { Consultation, Doctor, JobDeskItemProps, MedcinTime } from "@/type";
 import { useContext, useEffect, useState } from "react";
+import { columns } from "@/components/ui/columns";
+import { DataTable } from "@/components/ui/datatable";
 
 function Jobdesk() {
   const { user } = useContext(AuthContext);
   const [doc, setDoc] = useState<Doctor | null>(null);
+  const [consultation, setConsultation] = useState<Consultation[]>([]);
 
   useEffect(() => {
-    if (user != null) {
-      setDoc(JSON.parse(user));
-      // console.log(JSON.parse(user));
-    }
-  }, [user]); // Incluez 'user' dans le tableau des dépendances
+    const fetchUserAndConsultations = async () => {
+      if (user) {
+        try {
+          const userData = JSON.parse(user) as Doctor;
+          setDoc(userData);
+
+          const request: MedcinTime = {
+            date: format(new Date(), "yyyy-MM-dd'T'00:00:00.000'Z'"),
+            medecin: userData,
+          };
+
+          const consultations = await getConsultation(request);
+          setConsultation(consultations);
+          console.log(consultations); // Updated state is logged here
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    };
+
+    fetchUserAndConsultations();
+  }, [user]);
 
   return (
     <>
@@ -142,24 +157,16 @@ function Jobdesk() {
           <section
             className={cn(
               staticStyle.section,
-              `w-full max-w-[70%] p-10 flex-col items-start gap-5 rounded-lg `
+              `w-full max-w-[70%] p-10 flex-col items-start  justify-start gap-5 rounded-lg `
             )}
           >
             <h1 className="text-xl font-semibold">
               Schedule of the office day
             </h1>
             <DataTable
-              data={dataJobDesk as scheduleConsultation[]}
-              columns={columnsConsultation}
+              data={consultation}
+              columns={columns}
               usePagination={true}
-            />
-
-            <h1 className="text-xl font-semibold">
-              Schedule of the online day
-            </h1>
-            <DataTable
-              data={dataJobDesk as scheduleConsultation[]}
-              columns={columnsConsultation}
             />
           </section>
         </div>
