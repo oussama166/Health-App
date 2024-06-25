@@ -7,8 +7,8 @@ export const DossierMedicale = () => {
   let patient: string | null = "";
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const handleSubmit = async () => {
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     patient = localStorage.getItem("Patient");
 
     const Antecedent = (
@@ -112,7 +112,7 @@ export const DossierMedicale = () => {
           <div className="mt-12">
             <button
               className="w-max shadow-xl py-2.5 px-8 text-sm font-semibold rounded-md bg-transparent text-healthHub-700 border border-healthHub-700 focus:outline-none"
-              onClick={() => handleSubmit()}
+              onClick={(e) => handleSubmit(e)}
             >
               Create Dossier
             </button>

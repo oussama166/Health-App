@@ -53,7 +53,16 @@ export type Doctor = {
 };
 
 
-
+export type Consultation ={
+  id:number;
+  date:String;
+  StartConsultation:String;
+  EndConsultation:String;
+  comment:String;
+  Status:"REJECTED"|"PENDING"|"DONE";
+  medecin:Doctor|null;
+  patientConsulatation:Patient|null;
+}
 
 interface DossierMedical {
   id?: number;

@@ -19,15 +19,30 @@ import {
   DrawerFooter,
   DrawerTrigger,
 } from "../ui/drawer";
+import { Consultation, Doctor } from "@/type";
+import { getDoctorByName } from "@/api/Medecin";
 
 function Doctor() {
-  const id = useParams().id;
+  const id:string = useParams().id;
+  const [Doctor,setDoc] = useState<Doctor|null>(null)
   useEffect(() => {
-    console.log(id);
-  }, [id]);
+    setDoc(
+   await getDoctorByName(id))
+  }, [id,Doctor]);
 
   const [date, setDate] = useState<Date>();
-
+  const [time, setTime] = useState<Date>();
+  let c:Consultation={
+    id:0,
+    date:"2024-06-25T15:30:00.000Z",
+    StartConsultation:"2024-06-25T15:30:00.000Z",
+    EndConsultation:"2024-06-25T15:30:00.000Z",
+    comment:"String",
+    Status:"REJECTED",
+    medecin:Doctor,
+    patientConsulatation:(localStorage.getItem("Patient")!=null)?(JSON.parse(localStorage.getItem("Patient"))):null
+  }
+  
   return (
     <div className="w-full px-24 pt-40 flex flex-col gap-10">
       <div className="flex flex-row flex-shrink-0 gap-20 ">
