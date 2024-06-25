@@ -28,41 +28,57 @@ export const FindDoctors = () => {
     fetchDoctors();
   }, []);
 
+  const [filterText, setFilterText] = useState('');
+  const [selectedSpecialty, setSelectedSpecialty] = useState('');
+
+  const handleFilterChange = (event) => {
+    setFilterText(event.target.value);
+    setSelectedSpecialty(''); // Reset specialty filter when text filter is used
+  };
+
+  const handleSpecialtyChange = (event) => {
+    setSelectedSpecialty(event.target.value);
+    setFilterText(''); // Reset text filter when specialty filter is used
+  };
+
+  let filteredDoctors = doctors;
+
+  if (filterText) {
+    filteredDoctors = doctors.filter(doctor =>
+      doctor.name.toLowerCase().includes(filterText.toLowerCase())
+    );
+  } else if (selectedSpecialty) {
+    filteredDoctors = doctors.filter(doctor =>
+      doctor.specialty === selectedSpecialty
+    );
+  }
+
+  const specialties = Array.from(new Set(doctors.map(doctor => doctor.specialty)));
+
   return (
     <div className="font-[sans-serif] bg-white text-black p-6">
-      <div className="grid grid-cols-3 gap-4 my-28 mx-28">
-        <Select>
-          <SelectTrigger
-            className="w-full py-8 px-4 text-xl ring-offset-blue-500 focus-visible:ring-1 focus-visible:ring-blues-500"
-            chevronDownIcon={false}
-          >
-            <SelectValue
-              placeholder="Internal Medicine"
-              defaultValue={"Internal Medicine"}
-            />
-          </SelectTrigger>
-          <SelectContent>
-            {speciality.map((item, index) => (
-              <SelectItem className="text-xl" key={index} value={item}>
-                {item}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <div className="grid grid-cols-2 gap-4 my-28 mx-28">
+        <select className="w-full border border-gray-300 rounded py-8 px-4 text-xl ring-offset-blue-500 focus-visible:ring-1 focus-visible:ring-blues-500" value={selectedSpecialty} onChange={handleSpecialtyChange}>
+        <option value="">All Specialties</option>
+        {specialties.map(specialty => (
+          <option key={specialty} value={specialty}>
+            {specialty}
+          </option>
+        ))}
+      </select>
         <input
           type="text"
           placeholder="Search Doctor by name..."
           className="w-full p-2 border border-gray-300 rounded"
+          value={filterText}
+          onChange={handleFilterChange}
         />
-        <button className="w-full md:w-auto p-2 bg-blue-500 text-white rounded">
-          Search
-        </button>
       </div>
       <div className="font-[sans-serif] py-4 mx-auto lg:max-w-7xl sm:max-w-full">
         <h2 className="text-4xl font-extrabold text-gray-800 mb-12">Doctors</h2>
         {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {doctors.map((doctor) => (
+            {filteredDoctors.map((doctor) => (
               <DoctorCard
                 key={doctor.id} // Use the unique doctor.id as the key
                 fullName={doctor.name}
