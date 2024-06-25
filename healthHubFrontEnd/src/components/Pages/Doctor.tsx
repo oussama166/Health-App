@@ -138,20 +138,15 @@ function DoctorInfo() {
         <div className="space-y-5 mt-5">
           <h1 className="text-3xl font-semibold text-blues-500">Dr. {id}</h1>
           <h1 className="text-xl font-semibold text-blues-500">
-            United States
+          {doctordata[0]?.ville}
           </h1>
           <h1 className="text-xl font-semibold text-blues-500">
-            napu@dekjicu.pr
+            {doctordata[0]?.email}
           </h1>
-          <h1 className="text-xl font-semibold text-blues-500">Specialty</h1>
+          <h1 className="text-xl font-semibold text-blues-500">{doctordata[0]?.specialty}</h1>
 
           <p className="text-lg text-neutral-500 font-semibold leading-relaxed">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur.
+            {doctordata[0]?.price}$
           </p>
         </div>
 
