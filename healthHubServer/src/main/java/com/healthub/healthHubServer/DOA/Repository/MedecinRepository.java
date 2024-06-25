@@ -18,6 +18,8 @@ public interface MedecinRepository extends JpaRepository<Medecin, Integer> {
     )
     Optional<List<Medecin>> findByName(String name);
 
+
+
     @Query(
             value = "SELECT md FROM Medecin md WHERE md.userName = ?1"
     )

@@ -71,11 +71,12 @@ function DoctorInfo() {
         startConsultation: parseTime(date, startTime),
         endConsultation: parseTime(date, endTime),
         comment: description,
-        Status: "DONE",
+        Status: "PENDING",
         medecin: doctordata[0],
         patientConsulatation: patient,
       };
       setConsultationDone(await createConsultation(consultation));
+      console.log(consultationDone);
       if (consultationDone) {
         toast("Event has been created", {
           description: "Sunday, December 03, 2023 at 9:00 AM",

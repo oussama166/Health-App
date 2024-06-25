@@ -2,7 +2,7 @@ import { AuthContext } from "@/App";
 import { Button } from "@/components/ui/button.tsx";
 import { useHeaderVisibility, useScrollEffect } from "@/hooks/useEffect/Effect";
 import { AuthContextType } from "@/type";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Patient } from "@/type";
 
@@ -10,7 +10,7 @@ export const Header = () => {
   useScrollEffect();
   const isShown = useHeaderVisibility();
   const context: AuthContextType = useContext(AuthContext);
-  const { isLogged } = context;
+  const { isLogged, typeUser } = context;
   useEffect(() => {
     console.log(isLogged);
   }, [isLogged]);
@@ -89,7 +89,7 @@ export const Header = () => {
       {/* Start Buttons */}
       <div className={"min-w-52 flex items-center gap-5 tracking-wider"}>
         {isLogged ? (
-          context.typeUser === "Doctor" ? (
+          typeUser === "Doctor" ? (
             <HeaderDoc />
           ) : (
             <HeaderPatient />
@@ -156,17 +156,17 @@ const HeaderDoc = () => {
 };
 
 const HeaderPatient = () => {
-  const context: AuthContextType = useContext(AuthContext);
-  const { user } = context;
-  let userData: Patient | null = null;
-  useEffect(() => {
-    if (user !== null) {
-      userData = JSON.parse(user);
-    }
-  }, [user]);
   return (
     <>
-      <h1>{userData != null && userData?.userName}</h1>
+      <Button
+        className="font-bold bg-healthHub-700 text-primary-foreground hover:bg-healthHub-700/90 gap-1 text-base uppercase px-7 py-6"
+        onClick={() => {
+          localStorage.clear();
+          window.location.href = "/Login";
+        }}
+      >
+        Log out
+      </Button>
     </>
   );
 };

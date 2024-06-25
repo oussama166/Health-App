@@ -18,6 +18,7 @@ public class Consultation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
+    @Temporal(TemporalType.TIMESTAMP)
     Date date;
     Date startConsultation;
     Date endConsultation;

@@ -86,3 +86,8 @@ export interface signDoc {
   password: string;
   isDoctor: boolean;
 }
+
+export interface MedcinTime {
+  medecin: Doctor;
+  date: string;
+}

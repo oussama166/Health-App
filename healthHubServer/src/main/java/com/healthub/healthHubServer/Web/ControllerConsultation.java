@@ -4,6 +4,10 @@ import com.healthub.healthHubServer.DOA.Model.Consultation;
 import com.healthub.healthHubServer.DOA.Model.Medecin;
 import com.healthub.healthHubServer.Service.Manager.ManagerConsultation;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +33,15 @@ public class ControllerConsultation {
 
     public ControllerConsultation(ManagerConsultation consultationManager) {
         this.consultationManager = consultationManager;
+    }
+
+
+    @Data
+    @Builder
+    public static class MedcinTime {
+        private Medecin medecin;
+        private Date date;
+
     }
 
     // Logger
@@ -142,6 +155,25 @@ public class ControllerConsultation {
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }
+
+    @PostMapping(
+            path = "/getConsultationToday",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> getConsulatuonTody(@RequestBody MedcinTime medecin) {
+        try {
+            Optional<List<Consultation>> list = consultationManager.getConsultationToday(medecin.getDate(), medecin.getMedecin());
+            if (list.isPresent()) {
+                return ResponseEntity.status(200).body(list.get());
+            }
+            throw new Exception("This Doc hasn't any consultation for today !!!");
+        } catch (Exception e) {
+            logger.warn(e.getMessage());
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
 
     // =========== Modification =========== //
 

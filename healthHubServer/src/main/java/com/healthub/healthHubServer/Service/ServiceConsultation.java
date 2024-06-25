@@ -12,10 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import javax.swing.text.html.Option;
+import java.util.*;
 
 
 @Slf4j
@@ -102,6 +100,22 @@ public class ServiceConsultation implements ManagerConsultation {
             throw new Exception("Error occur getting consultation!!!");
         } catch (Exception e) {
             logger.warn(e.getMessage());
+            return Optional.empty();
+        }
+    }
+
+
+    @Override
+    public Optional<List<Consultation>> getConsultationToday(Date date,Medecin medecin) {
+        try {
+           
+            Optional<List<Consultation>> consultationsTody = consultationRepository.findByDateAndMedecin(date, medecin, ConsultationStatus.REJECTED);
+            if (consultationsTody.isPresent()) {
+                return Optional.of(consultationsTody.get());
+            }
+            throw new Exception("We can not find any Consulation for today!!!");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             return Optional.empty();
         }
     }

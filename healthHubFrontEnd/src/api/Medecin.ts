@@ -28,13 +28,19 @@ export const signAsDoctorOrPatient = async (data: signDoc) => {
       },
     })
     .then((res) => {
-      console.log(res);
       alert("Connected");
-      return true;
+      localStorage.clear();
+      return {
+        data : res.data,
+        isLogged: true,
+      };
     })
     .catch((err) => {
       console.error(err);
-      return false;
+      return {
+        data : err,
+        isLogged: false,
+      };
     });
 };
 export const getDoctors = async () => {

@@ -32,6 +32,7 @@ public interface ManagerConsultation {
             Medecin medecin,
             Date dateConsultations
     );
+    Optional<List<Consultation>> getConsultationToday(Date date,Medecin medecin);
 
     Optional<Consultation> getConsultation(
             Medecin medecin,

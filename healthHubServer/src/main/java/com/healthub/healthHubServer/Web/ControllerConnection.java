@@ -64,7 +64,13 @@ public class ControllerConnection {
         // Example authentication logic (replace with your actual authentication logic)
         if (authenticate(connectRequest.getEmail(), connectRequest.getPassword(), connectRequest.getIsDoctor())) {
             String role = connectRequest.getIsDoctor() ? "Doctor" : "Patient";
-            return ResponseEntity.ok("Welcome, " + role);
+            if (role.equals("Doctor")) {
+                logger.info(role);
+                return ResponseEntity.ok(medecinRepository.findByEmailAndPassword(connectRequest.getEmail(), connectRequest.getPassword()));
+            } else {
+                logger.info(role);
+                return ResponseEntity.ok(patientRepository.findByEmailAndPassword(connectRequest.getEmail(), connectRequest.getPassword()));
+            }
         } else {
             return ResponseEntity.status(401).body("Authentication failed");
         }

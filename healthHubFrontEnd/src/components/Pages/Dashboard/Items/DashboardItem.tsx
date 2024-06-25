@@ -1,8 +1,10 @@
 import { AuthContext } from "@/App";
+import { getConsultation } from "@/api/Consultation";
 import { columns } from "@/components/ui/columns";
 import { DataTable } from "@/components/ui/datatable";
 import { cn } from "@/lib/utils";
-import { Doctor } from "@/type";
+import { Consultation, Doctor, MedcinTime } from "@/type";
+import { format } from "date-fns";
 import { useContext, useEffect, useState } from "react";
 import { TbArrowBarToLeft, TbArrowBarToRight } from "react-icons/tb";
 
@@ -944,11 +946,30 @@ const schedules = [
 function DashboardItem() {
   const { user } = useContext(AuthContext);
   const [doc, setDoc] = useState<Doctor | null>(null);
+  const [consultation, setConsultation] = useState<Consultation[]>([]);
 
   useEffect(() => {
-    if (user != null) {
-      setDoc(JSON.parse(user));
-    }
+    const fetchUserAndConsultations = async () => {
+      if (user) {
+        try {
+          const userData = JSON.parse(user) as Doctor;
+          setDoc(userData);
+
+          const request: MedcinTime = {
+            date: format(new Date(), "yyyy-MM-dd'T'00:00:00.000'Z'"),
+            medecin: userData,
+          };
+
+          const consultations = await getConsultation(request);
+          setConsultation(consultations);
+          console.log(consultations); // Updated state is logged here
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    };
+
+    fetchUserAndConsultations();
   }, [user]);
   return (
     <section
@@ -1045,7 +1066,7 @@ function DashboardItem() {
         <h1 className="text-xl font-sans font-semibold text-neutral-950 w-full">
           Today's Schedule
         </h1>
-        <DataTable columns={columns} data={schedules} />
+        <DataTable columns={columns} data={consultation} />
       </section>
     </section>
   );

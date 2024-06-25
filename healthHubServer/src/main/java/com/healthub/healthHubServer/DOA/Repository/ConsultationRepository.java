@@ -29,4 +29,9 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Inte
     boolean exitsConsultationPending(int idP, int idD, ConsultationStatus Status);
 
     Optional<Set<Consultation>> findByMedecinAndDateAndPatientConsulatation(Medecin medecin, Date date, Patient patientConsulatation);
+
+    @Query(
+            value = "SELECT ct FROM Consultation ct WHERE ct.date = ?1 AND ct.medecin = ?2 AND ct.Status != ?3"
+    )
+    Optional<List<Consultation>> findByDateAndMedecin(Date date, Medecin medecin, ConsultationStatus consultationStatus);
 }

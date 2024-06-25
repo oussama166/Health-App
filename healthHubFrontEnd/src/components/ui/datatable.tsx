@@ -142,8 +142,7 @@ export function DataTable<TData, TValue>({
                             {row.original.title}
                           </DialogTitle>
                           <DialogDescription>
-                            {row.original.date} from {row.original.startTime} to{" "}
-                            {row.original.endTime}
+                            {row.original.name}
                           </DialogDescription>
                         </DialogHeader>
 

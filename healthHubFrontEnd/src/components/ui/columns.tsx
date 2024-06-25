@@ -1,5 +1,7 @@
 import { cn } from "@/lib/utils";
+import { Consultation } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 import { Badge } from "./badge";
 import { Button } from "./button";
@@ -27,46 +29,64 @@ export type scheduleConsultation = {
   state: "pending" | "approved" | "rejected";
 };
 
-export const columns: ColumnDef<Schedule>[] = [
+export const columns: ColumnDef<Consultation>[] = [
   {
     accessorKey: "id",
     header: "ID",
   },
   {
-    accessorKey: "title",
-    header: "Title",
-  },
-  {
     accessorKey: "date",
-    header: "Date",
-  },
-  {
-    accessorKey: "startTime",
-    header: ({ column }) => {
+    header: "Date of Consultation",
+    cell: ({ row }) => {
+      const dt = format(row.getValue("date"), "dd/MM/yyyy");
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Start Time
-          <MoreHorizontal className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="w-full flex items-center justify-center">{dt}</div>
       );
     },
   },
   {
-    accessorKey: "endTime",
-    header: "End Time",
+    accessorKey: "startConsultation",
+    header: "Start Session at",
+    cell: ({ row }) => {
+      const dt = format(row.getValue("startConsultation"), "HH:mm");
+      return (
+        <div className="w-full flex items-center justify-center">{dt}</div>
+      );
+    },
   },
   {
-    accessorKey: "location",
+    accessorKey: "endConsultation",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Location
+          End Session at
+          <MoreHorizontal className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell : ({row}) => {
+      const dt = format(row.getValue("endConsultation"), "HH:mm");
+      return (
+        <div className="w-full flex items-center justify-center">{dt}</div>
+      )
+    }
+  },
+  {
+    accessorKey: "comment",
+    header: "Description",
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
           <MoreHorizontal className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -75,20 +95,16 @@ export const columns: ColumnDef<Schedule>[] = [
       <div className="w-full flex items-center justify-center">
         <Badge
           className={cn(
-            row.getValue("location") == "Office"
+            row.getValue("status") == "DONE"
               ? "bg-green-500 hover:bg-green-600/80"
-              : "bg-red-500 hover:bg-red-600/80",
+              : "bg-yellow-500 hover:bg-yellow-600/80",
             "font-semibold p-2 uppercase tracking-widest cursor-pointer"
           )}
         >
-          {row.getValue("location")}
+          {row.getValue("status")}
         </Badge>
       </div>
     ),
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
   },
 ];
 

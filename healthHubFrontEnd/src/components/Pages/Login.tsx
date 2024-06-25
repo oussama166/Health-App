@@ -15,19 +15,29 @@ export const Login = () => {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const data: signDoc = {
-      email: email,
-      password: password,
-      isDoctor: isDoc,
-    };
-    context.setIsLogged(await signAsDoctorOrPatient(data));
-    if (context.isLogged) {
-      const userType = context.typeUser;
-      if (userType == "Doctor") {
-        navigate("/Dashboard");
+    try {
+      const dataReq: signDoc = {
+        email: email,
+        password: password,
+        isDoctor: isDoc,
+      };
+
+      const { data, isLogged } = await signAsDoctorOrPatient(dataReq);
+      context.setIsLogged(isLogged);
+
+      if (isLogged) {
+        context.setTypeUser(isDoc ? "Doctor" : "Patient");
+        const userType = isDoc ? "Doctor" : "Patient";
+
+        localStorage.setItem(userType, JSON.stringify(data));
+        navigate(isDoc ? "/Dashboard" : "/FindDoctors");
       } else {
-        navigate("/FindDoctors");
+        // Handle case where login failed (e.g., show error message)
+        console.error("Login failed");
       }
+    } catch (error) {
+      console.error("Error during sign-in:", error);
+      // Optionally, show an error message to the user
     }
   };
 

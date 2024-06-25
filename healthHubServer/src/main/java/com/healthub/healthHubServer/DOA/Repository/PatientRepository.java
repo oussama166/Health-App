@@ -19,4 +19,6 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
 
     @Query("select (count(p) > 0) from Patient p where p.email = ?1 and p.password = ?2")
     boolean connectPatient(String email, String password);
+
+    Optional<Patient> findByEmailAndPassword(String email, String password);
 }
