@@ -13,6 +13,15 @@
     "RADIOLOGY",
     "SURGERY"
   ],
+  "Ville":[
+    "Casablanca",
+    "Rabat",
+    "Temera",
+    "EL jadida",
+    "Meknes",
+    "Fes",
+    "Salé"
+  ],
   "Services": [
     {
       "title": "Online Consultations",
