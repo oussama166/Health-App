@@ -4,14 +4,14 @@ import { RegistrationM } from "@/components/Pages/RegistrationM";
 import { Header } from "@/components/Static/Header.tsx";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
+import { createContext, useEffect, useState } from "react";
 import { Dashboard } from "./components/Pages/Dashboard";
+import DoctorInfo from "./components/Pages/Doctor";
+import { DossierMedicale } from "./components/Pages/Dossier-medicale";
+import { FindDoctors } from "./components/Pages/FindDoctors";
+import { Login } from "./components/Pages/Login";
 import { Error } from "./components/Static/Error";
 import { Footer } from "./components/Static/Footer";
-import { Login } from "./components/Pages/Login";
-import { FindDoctors } from "./components/Pages/FindDoctors";
-import Doctor from "./components/Pages/Doctor";
-import { DossierMedicale } from "./components/Pages/Dossier-medicale";
-import { createContext, useEffect, useState } from "react";
 import { AuthContextType } from "./type";
 
 // create context to check the local storage
@@ -55,7 +55,7 @@ function App() {
               <Route path="/RegistrationMedecin" element={<RegistrationM />} />
               <Route path="/Login" element={<Login />} />
               <Route path="/FindDoctors" element={<FindDoctors />} />
-              <Route path="/Doctor/:id" element={<Doctor />} />
+              <Route path="/Doctor/:id" element={<DoctorInfo />} />
               <Route path="/DossierMedicale" element={<DossierMedicale />} />
               {/* As Features */}
               {/* <Route path="/Services" element={<Servicies />} /> */}
@@ -74,3 +74,4 @@ function App() {
 }
 
 export { App, AuthContext };
+

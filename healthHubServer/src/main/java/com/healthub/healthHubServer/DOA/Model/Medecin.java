@@ -1,5 +1,6 @@
 package com.healthub.healthHubServer.DOA.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.healthub.healthHubServer.DOA.Model.Enum.MedicalSpecialty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -35,8 +36,11 @@ public class Medecin {
     @Min(value = 3, message = "The price should be greater than 3$ !!!")
     Double Price;
     MedicalSpecialty specialty;
+
     @OneToMany(mappedBy = "medecin")
+    @JsonIgnore
     private List<Consultation> consultations;
+
     @OneToMany(mappedBy = "medecin")
     private List<Avis> avis;
 

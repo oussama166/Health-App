@@ -33,7 +33,8 @@ export type Patient = {
   email: string;
   password: string;
   dossier_medicale: DossierMedical;
-  consultations: Array<any>; // Add consultation type btw <any>
+  // ! Can make error this line
+  consultations: Array<Consultation>; // Add consultation type btw <any>
   avis: Array<any>; // Add Avis type btw <any>
 };
 
@@ -48,21 +49,21 @@ export type Doctor = {
   joinDate: string;
   price: number;
   specialty: string;
-  consultations?: Array<any>; // Add consultation type btw <any>
+  //! Can make error this line
+  consultations?: Array<Consultation>; // Add consultation type btw <any>
   avis?: Array<any>; // Add Avis type btw <any>
 };
 
-
-export type Consultation ={
-  id:number;
-  date:String;
-  StartConsultation:String;
-  EndConsultation:String;
-  comment:String;
-  Status:"REJECTED"|"PENDING"|"DONE";
-  medecin:Doctor|null;
-  patientConsulatation:Patient|null;
-}
+export type Consultation = {
+  id: number;
+  date: string;
+  startConsultation: string;
+  endConsultation: string;
+  comment: string;
+  Status: "REJECTED" | "PENDING" | "DONE";
+  medecin: Doctor | null;
+  patientConsulatation: Patient;
+};
 
 interface DossierMedical {
   id?: number;

@@ -68,7 +68,7 @@ export const FindDoctors = () => {
                 fullName={doctor.name}
                 speciality={doctor.specialty}
                 rating={2} // Assuming rating is hardcoded as 2
-                price={10} // Assuming price is hardcoded as 10
+                price={doctor.price} // Assuming price is hardcoded as 10
               />
             ))}
           </div>
@@ -98,7 +98,7 @@ const DoctorCard = ({
     currency: "USD",
   });
   return (
-    <Link to={`/doctor/${fullName.toLowerCase().replace(" ", "-")}`}>
+    <Link to={`/doctor/${fullName}`}>
       <div className="bg-gray-50 shadow-md overflow-hidden rounded-lg cursor-pointer hover:-translate-y-2 transition-all relative">
         <div className="bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full cursor-pointer absolute top-3 right-3">
           <svg

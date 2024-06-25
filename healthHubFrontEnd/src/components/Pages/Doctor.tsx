@@ -7,8 +7,13 @@ import {
   TextArea,
   TextField,
   TimeField,
+  TimeValue,
 } from "react-aria-components";
 
+import { getDoctorByName } from "@/api/Medecin";
+import { Consultation, Doctor, Patient } from "@/type";
+import { parseDate } from "@internationalized/date";
+import { format, parse, parseISO } from "date-fns";
 import { FaStar } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { Button } from "../ui/button";
@@ -19,30 +24,73 @@ import {
   DrawerFooter,
   DrawerTrigger,
 } from "../ui/drawer";
-import { Consultation, Doctor } from "@/type";
-import { getDoctorByName } from "@/api/Medecin";
+import { createConsultation } from "@/api/Consultation";
+import { toast } from "sonner";
+import { Toaster } from "../ui/sonner";
 
-function Doctor() {
-  const id:string = useParams().id;
-  const [Doctor,setDoc] = useState<Doctor|null>(null)
+function DoctorInfo() {
+  const id = useParams().id;
+  const [doctordata, setDoc] = useState<Doctor | null>(null);
+  const [patient, setPatient] = useState<Patient>();
+  const [date, setDate] = useState<string>(format(new Date(), "yyyy-MM-dd"));
+  const [startTime, setStartTime] = useState<string>("");
+  const [endTime, setEndTime] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [consultationDone, setConsultationDone] = useState<boolean>(false);
+
   useEffect(() => {
-    setDoc(
-   await getDoctorByName(id))
-  }, [id,Doctor]);
+    const fetchDoctors = async () => {
+      try {
+        setPatient(JSON.parse(localStorage.getItem("Patient") || "{}"));
+        console.log(patient);
+        const doctorsData = await getDoctorByName(id);
+        setDoc(doctorsData);
+      } catch (error) {
+        console.error("Error fetching doctors", error);
+      }
+    };
+    fetchDoctors();
+  }, [id]);
 
-  const [date, setDate] = useState<Date>();
-  const [time, setTime] = useState<Date>();
-  let c:Consultation={
-    id:0,
-    date:"2024-06-25T15:30:00.000Z",
-    StartConsultation:"2024-06-25T15:30:00.000Z",
-    EndConsultation:"2024-06-25T15:30:00.000Z",
-    comment:"String",
-    Status:"REJECTED",
-    medecin:Doctor,
-    patientConsulatation:(localStorage.getItem("Patient")!=null)?(JSON.parse(localStorage.getItem("Patient"))):null
-  }
-  
+  const parseDate = (date: string) => {
+    const parsedDate = parseISO(date);
+    return format(parsedDate, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+  };
+  const parseTime = (date: string, time: string) => {
+    const parsedTime = parse(time, "HH:mm:ss", date);
+    // const formattedStartTime = format(parsedTime, "HH:mm:ss");
+    return format(parsedTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+  };
+
+  // create a new consultation
+  const createConsult = async () => {
+    try {
+      const consultation: Consultation = {
+        id: 0,
+        date: parseDate(date),
+        startConsultation: parseTime(date, startTime),
+        endConsultation: parseTime(date, endTime),
+        comment: description,
+        Status: "DONE",
+        medecin: doctordata[0],
+        patientConsulatation: patient,
+      };
+      setConsultationDone(await createConsultation(consultation));
+      if (consultationDone) {
+        toast("Event has been created", {
+          description: "Sunday, December 03, 2023 at 9:00 AM",
+          action: {
+            label: "Undo",
+            onClick: () => console.log("Undo"),
+          },
+          position: "top-right",
+        });
+      }
+    } catch (error) {
+      console.error("Error creating consultation", error);
+    }
+  };
+
   return (
     <div className="w-full px-24 pt-40 flex flex-col gap-10">
       <div className="flex flex-row flex-shrink-0 gap-20 ">
@@ -60,12 +108,23 @@ function Doctor() {
               </Button>
             </DrawerTrigger>
             <DrawerContent>
-              <ConsultationBody date={date} setDate={setDate} />
+              <ConsultationBody
+                setDate={setDate}
+                setStartTime={setStartTime}
+                setEndTime={setEndTime}
+                setDescription={setDescription}
+              />
+              <Toaster expand/>
               <DrawerFooter>
-                <Button className="w-full py-7 text-xl">Submit</Button>
+                <Button
+                  className="w-full py-7 text-xl"
+                  onClick={() => createConsult()}
+                >
+                  Submit
+                </Button>
                 <DrawerClose>
                   <Button variant="outline" className="w-full py-7 text-xl">
-                    Cancel
+                    Close
                   </Button>
                 </DrawerClose>
               </DrawerFooter>
@@ -139,42 +198,73 @@ const ReviewComp = ({
 };
 
 const ConsultationBody = ({
-  date,
   setDate,
-  time,
-  setTime,
+  setStartTime,
+  setEndTime,
+  setDescription,
 }: {
-  date?: Date | undefined;
-  setDate?: React.Dispatch<React.SetStateAction<Date | undefined>>;
-  time?: Date | undefined;
-  setTime?: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  setDate?: React.Dispatch<React.SetStateAction<string>>;
+  setStartTime?: React.Dispatch<React.SetStateAction<string>>;
+  setEndTime?: React.Dispatch<React.SetStateAction<string>>;
+  setDescription?: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   return (
     <>
       <div className="w-[50%] flex flex-col items-center gap-10 mx-auto my-9">
         <h1 className="text-2xl font-semibold text-black">Book Consultation</h1>
         <div className="flex flex-row gap-5 w-full justify-start items-center">
-          <TimeField className={"text-xl space-y-2"}>
+          <TimeField
+            className={"text-xl space-y-2"}
+            onChange={(e: TimeValue) => {
+              if (e != undefined) {
+                console.log(e.toString());
+                setStartTime(e.toString());
+              }
+            }}
+          >
             <Label>Start Time</Label>
             <DateInput>
               {(segment) => <DateSegment segment={segment} />}
             </DateInput>
           </TimeField>
-          <TimeField className={"text-xl space-y-2"}>
+          <TimeField
+            className={"text-xl space-y-2"}
+            onChange={(e: TimeValue) => {
+              if (e != undefined) {
+                console.log(e.toString());
+                setEndTime(e.toString());
+              }
+            }}
+          >
             <Label>End Time</Label>
             <DateInput>
               {(segment) => <DateSegment segment={segment} />}
             </DateInput>
           </TimeField>
 
-          <DateField className={"text-xl space-y-2"}>
+          <DateField
+            className={"text-xl space-y-2"}
+            onChange={(e) => {
+              console.log(e);
+              console.log(e.toString());
+              setDate(e.toString());
+            }}
+            defaultValue={parseDate(format(new Date(), "yyyy-MM-dd"))}
+          >
             <Label>Date of Consultation</Label>
             <DateInput>
               {(segment) => <DateSegment segment={segment} />}
             </DateInput>
           </DateField>
         </div>
-        <TextField className={"text-xl space-y-2 w-full"}>
+        <TextField
+          className={"text-xl space-y-2 w-full"}
+          onChange={(e) => {
+            console.log(e);
+            console.log(e.toString());
+            setDescription(e.toString());
+          }}
+        >
           <Label>Description</Label>
           <TextArea
             className={
@@ -186,4 +276,4 @@ const ConsultationBody = ({
     </>
   );
 };
-export default Doctor;
+export default DoctorInfo;

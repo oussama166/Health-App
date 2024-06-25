@@ -1,13 +1,13 @@
 import { putPatients } from "@/api/Patient";
 import { Patient } from "@/type";
-import { useState } from "react";
+import { MouseEventHandler, useState } from "react";
 import { useNavigate } from "react-router-dom";
 export const DossierMedicale = () => {
   const navigate = useNavigate();
   let patient: string | null = "";
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e ) => {
     e.preventDefault();
     patient = localStorage.getItem("Patient");
 
