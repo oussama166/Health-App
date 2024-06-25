@@ -29,9 +29,9 @@ import { toast } from "sonner";
 import { Toaster } from "../ui/sonner";
 
 function DoctorInfo() {
-  const id = useParams().id;
+  const { id } = useParams<{ id: string }>();
   const [doctordata, setDoc] = useState<Doctor | null>(null);
-  const [patient, setPatient] = useState<Patient>();
+  const [patient, setPatient] = useState<Patient | null>(null);
   const [date, setDate] = useState<string>(format(new Date(), "yyyy-MM-dd"));
   const [startTime, setStartTime] = useState<string>("");
   const [endTime, setEndTime] = useState<string>("");
@@ -41,16 +41,31 @@ function DoctorInfo() {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        setPatient(JSON.parse(localStorage.getItem("Patient") || "{}"));
-        console.log(patient);
+        const storedPatient = localStorage.getItem("Patient");
+        if (storedPatient) {
+          setPatient(JSON.parse(storedPatient));
+        }
+
         const doctorsData = await getDoctorByName(id);
-        setDoc(doctorsData);
+        if (doctorsData && doctorsData.length > 0) {
+          setDoc(doctorsData[0]);
+        } else {
+          console.error("No doctor found for the given name");
+        }
       } catch (error) {
         console.error("Error fetching doctors", error);
       }
     };
     fetchDoctors();
   }, [id]);
+
+  useEffect(() => {
+    console.log(patient);
+  }, [patient]);
+
+  useEffect(() => {
+    console.log(doctordata);
+  }, [doctordata]);
 
   const parseDate = (date: string) => {
     const parsedDate = parseISO(date);
@@ -72,7 +87,7 @@ function DoctorInfo() {
         endConsultation: parseTime(date, endTime),
         comment: description,
         Status: "PENDING",
-        medecin: doctordata[0],
+        medecin: doctordata,
         patientConsulatation: patient,
       };
       setConsultationDone(await createConsultation(consultation));
@@ -115,7 +130,7 @@ function DoctorInfo() {
                 setEndTime={setEndTime}
                 setDescription={setDescription}
               />
-              <Toaster expand/>
+              <Toaster expand />
               <DrawerFooter>
                 <Button
                   className="w-full py-7 text-xl"
@@ -138,15 +153,17 @@ function DoctorInfo() {
         <div className="space-y-5 mt-5">
           <h1 className="text-3xl font-semibold text-blues-500">Dr. {id}</h1>
           <h1 className="text-xl font-semibold text-blues-500">
-          {doctordata[0]?.ville}
+            {doctordata?.ville}
           </h1>
           <h1 className="text-xl font-semibold text-blues-500">
-            {doctordata[0]?.email}
+            {doctordata?.email}
           </h1>
-          <h1 className="text-xl font-semibold text-blues-500">{doctordata[0]?.specialty}</h1>
+          <h1 className="text-xl font-semibold text-blues-500">
+            {doctordata?.specialty}
+          </h1>
 
           <p className="text-lg text-neutral-500 font-semibold leading-relaxed">
-            {doctordata[0]?.price}$
+            {doctordata?.price}$
           </p>
         </div>
 
