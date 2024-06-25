@@ -46,13 +46,6 @@ const sideBarItemData: SideBarItemData = {
     },
     icon: <FaRegClock className="text-xl" />,
   },
-  settings: {
-    main: "settings",
-    sub: {
-      Profile: "/Password",
-    },
-    icon: <FaCog className="text-xl" />,
-  },
 };
 
 interface sideBarItemProps extends React.HtmlHTMLAttributes<HTMLDivElement> {

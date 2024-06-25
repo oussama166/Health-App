@@ -72,7 +72,13 @@ function Dashboard() {
               <AvatarImage src="/xavatario.png" alt="avartar" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar> */}
-            <Button variant={"default"} className="bg-blues-600 text-white hover:bg-blues-700/80">
+            <Button 
+            variant={"default"} className="bg-blues-600 text-white hover:bg-blues-700/80"
+            onClick={() => {
+              localStorage.clear();
+              window.location.href = "/Login";
+            }}
+            >
               Log out
             </Button>
           </div>
@@ -106,7 +112,6 @@ function Dashboard() {
               displayName="attendance"
               smallIcon={close}
             />
-            <SideBarItem type="Drop" displayName="settings" smallIcon={close} />
             {/* Attendance */}
           </div>
           <div
